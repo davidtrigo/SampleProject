@@ -4,7 +4,6 @@ package david.sampleproyect;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,11 +13,14 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.Date;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener {
 
+    private final static String TAG = MainActivity.class.getSimpleName();
     private final static int REQUEST_CODE_ACTIVITY = 0;
     private TextView textView;
-    private String fechaRetorno =null;
+  /*  private String fechaRetorno =null;*/
+
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,64 +32,83 @@ public class MainActivity extends Activity {
         textView.setText("Esta es la activity 1");
 
         Button botonNuevaActivity = findViewById(R.id.buttonNewActivity);
+        Button btnsendemail = findViewById(R.id.btnsendemail);
 
-        botonNuevaActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(MainActivity.class.getSimpleName(), "onClick");
-                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                Date currentDate = Calendar.getInstance().getTime();
-                intent.putExtra("date", currentDate.toString());
-                //startActivity(intent);
-                startActivityForResult(intent, REQUEST_CODE_ACTIVITY);
+        
+        botonNuevaActivity.setOnClickListener(this);
+        btnsendemail.setOnClickListener(this);
 
 
-            }
 
-
-        });
-        Log.d(MainActivity.class.getSimpleName(), "onCreate");
+        Log.d(TAG, "onCreate");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(MainActivity.class.getSimpleName(), "onStart");
+        Log.d(TAG, "onStart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(MainActivity.class.getSimpleName(), "onResume");
+        Log.d(TAG, "onResume");
     }
 
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(MainActivity.class.getSimpleName(), "onStop");
+        Log.d(TAG, "onStop");
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(MainActivity.class.getSimpleName(), "onDestroy");
+        Log.d(TAG, "onDestroy");
     }
 
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(MainActivity.class.getSimpleName(), "onPause");
+        Log.d(TAG, "onPause");
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
-        if (fechaRetorno!=null){
+        Log.d(TAG, "onSaveInstanceState");
+
+        if (textView != null){
+            outState.putString("fechaRetorno",textView.getText().toString());
+            Log.d(TAG, "onSaveInstanceState  if");
+        }
+
+        /*if (fechaRetorno != null){
             outState.putString("fechaRetorno",fechaRetorno);
+            Log.d(TAG, "onSaveInstanceState  if");
+        }*/
+    }
+
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        
+        Log.d(TAG, "onRestoreInstanceState");
+        
+        /*if (savedInstanceState != null && savedInstanceState.containsKey("fechaRetorno")){
+            fechaRetorno = savedInstanceState.getString("fechaRetorno");
+            textView.setText(fechaRetorno);
+            
+        }*/
+
+        if (savedInstanceState != null && savedInstanceState.containsKey("fechaRetorno")){
+            textView.setText(savedInstanceState.getString("fechaRetorno"));
 
         }
     }
@@ -101,11 +122,45 @@ public class MainActivity extends Activity {
 
             Toast.makeText(MainActivity.this, "¡Intent devuelto!", Toast.LENGTH_LONG).show();
 
-            if (data.getExtras() != null && data.getExtras().containsKey("date")) {
+            /*   if (data.getExtras() != null && data.getExtras().containsKey("date")) {
                   fechaRetorno = data.getExtras().getString("date");
                 textView.setText(fechaRetorno);
+            }*/
+
+            if (data.getExtras() != null && data.getExtras().containsKey("date")) {
+                textView.setText(data.getExtras().getString("date"));
             }
 
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()){
+
+            case R.id.buttonNewActivity:
+
+                Log.d(TAG, "onClick");
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                Date currentDate = Calendar.getInstance().getTime();
+                intent.putExtra("date", currentDate.toString());
+                //startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_ACTIVITY);
+
+
+            break;
+
+            case R.id.btnsendemail:
+
+                // enviar email
+                break;
+
+            default:
+
+                // comportamiento por default
+                break;
+        }
+
     }
 }

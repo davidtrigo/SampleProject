@@ -28,6 +28,10 @@ public class SecondActivity extends Activity {
             String fecha = getIntent().getExtras().getString("date"); // id de Intent.putExtra("date",currentDate.toString());  en MainActivity
             lblMensajeRecibido.setText(fecha);
 
+            /*
+               codigo reducido
+
+            ((TextView)findViewById(R.id.lblMensajeRecibido)).setText(getIntent().getExtras().getString("date"));*/
 
         }
 
