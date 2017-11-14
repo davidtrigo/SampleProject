@@ -4,6 +4,7 @@ package david.sampleproyect;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,7 @@ public class MainActivity extends Activity {
 
     private final static int REQUEST_CODE_ACTIVITY = 0;
     private TextView textView;
+    private String fechaRetorno =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,16 @@ public class MainActivity extends Activity {
         Log.d(MainActivity.class.getSimpleName(), "onPause");
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+
+        if (fechaRetorno!=null){
+            outState.putString("fechaRetorno",fechaRetorno);
+
+        }
+    }
+
     /**/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -90,8 +102,8 @@ public class MainActivity extends Activity {
             Toast.makeText(MainActivity.this, "¡Intent devuelto!", Toast.LENGTH_LONG).show();
 
             if (data.getExtras() != null && data.getExtras().containsKey("date")) {
-                String fecha = data.getExtras().getString("date");
-                textView.setText(fecha);
+                  fechaRetorno = data.getExtras().getString("date");
+                textView.setText(fechaRetorno);
             }
 
         }
