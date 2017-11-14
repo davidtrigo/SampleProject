@@ -2,7 +2,9 @@ package david.sampleproyect;
 
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,7 +36,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Button botonNuevaActivity = findViewById(R.id.buttonNewActivity);
         Button btnsendemail = findViewById(R.id.btnsendemail);
 
-        
         botonNuevaActivity.setOnClickListener(this);
         btnsendemail.setOnClickListener(this);
 
@@ -153,7 +154,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             case R.id.btnsendemail:
 
-                // enviar email
+                Intent intentEmail = new Intent(Intent.ACTION_SENDTO);
+                intentEmail.setData(Uri.parse("mailto:email@email.com"));
+                intentEmail.putExtra(Intent.EXTRA_EMAIL,"email@email.com");
+                intentEmail.putExtra(Intent.EXTRA_SUBJECT,"Asunto Email");
+                try {
+
+                    startActivity(Intent.createChooser(intentEmail,"Selecciona app email") );
+
+                } catch (ActivityNotFoundException e){
+
+                    e.printStackTrace();
+
+                    Toast.makeText(this, "¡No se ha encontrado ningún gestor de correo electronico!", Toast.LENGTH_LONG).show();
+                }
+
                 break;
 
             default:
